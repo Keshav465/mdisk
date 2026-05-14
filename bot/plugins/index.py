@@ -37,7 +37,7 @@ async def index_handler(c: Bot, m: t.Message):
     total = 0
     files = []
     
-    async for message in c.USER.search_messages(target_chat.id):
+    async for message in c.USER.get_chat_history(target_chat.id):
         if message.document or message.video or message.audio:
             file = message.document or message.video or message.audio
             file_name = getattr(file, 'file_name', None) or message.caption or ""
@@ -63,6 +63,7 @@ async def index_handler(c: Bot, m: t.Message):
         
         total += 1
         if total % 1000 == 0:
+            await sts.edit(f"Scanned {total} messages...\nIndexed {count} files...")
             await asyncio.sleep(1) # Throttling
 
     if files:
@@ -86,7 +87,7 @@ async def perform_auto_indexing(c: Bot, chat_id):
     try:
         count = 0
         files = []
-        async for message in c.USER.search_messages(chat_id):
+        async for message in c.USER.get_chat_history(chat_id):
             if message.document or message.video or message.audio:
                 file = message.document or message.video or message.audio
                 file_name = getattr(file, 'file_name', None) or message.caption or ""
