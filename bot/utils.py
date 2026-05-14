@@ -3,7 +3,6 @@ import functools
 import re
 import random
 from pyrogram import enums, types, Client
-from bot import Bot
 from bot.config import Config, Script
 from bot.database import user_db, group_db
 from telegraph.aio import Telegraph
@@ -32,7 +31,7 @@ INTERVALS = OrderedDict([
 
 from bot.database.index_db import index_db
 
-async def filter_chat(c: Bot, query, chat_id_list=Config.DATABASE_CHANNEL, offset=0, filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY, num_results=Config.LIMIT):
+async def filter_chat(c: Client, query, chat_id_list=Config.DATABASE_CHANNEL, offset=0, filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY, num_results=Config.LIMIT):
     results, total = await index_db.search_files(query, offset=offset, limit=num_results)
     
     # Convert database results back to a format similar to pyrogram messages for compatibility

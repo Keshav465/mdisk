@@ -50,6 +50,11 @@ class Bot(Client):
     async def start(self):
 
         await super().start()
+        
+        if not Config.SESSION_STRING:
+            logging.error("SESSION_STRING is missing! Please add it to your environment variables.")
+            sys.exit(1)
+
         self.USER, self.USER_ID = await User(Config.SESSION_STRING, "user_bot").start()
 
         if Config.UPDATE_CHANNEL:
@@ -92,7 +97,7 @@ class Bot(Client):
 
             app = web.AppRunner(await web_server())
             await app.setup()
-            await web.TCPSite(app, "0.0.0.0", 8000).start()
+            await web.TCPSite(app, "0.0.0.0", Config.PORT).start()
 
     async def stop(self, *args):
         await super().stop()

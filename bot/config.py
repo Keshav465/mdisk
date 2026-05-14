@@ -16,17 +16,17 @@ def is_enabled(value, default):
 class Config(object):
 
     BOT_USERNAME = os.environ.get("BOT_USERNAME")
-    API_ID = int(os.environ.get("API_ID"))
-
+    API_ID = int(os.environ.get("API_ID", "0"))
     API_HASH = os.environ.get("API_HASH")
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
+    PORT = int(os.environ.get("PORT", "8080"))
     ADMINS = (
         [int(i.strip()) for i in os.environ.get("ADMINS").split(",")]
         if os.environ.get("ADMINS")
         else []
     )
-    DATABASE_NAME = os.environ.get("DATABASE_NAME", BOT_USERNAME)
-    DATABASE_URL = os.environ.get("DATABASE_URL", None)
+    DATABASE_NAME = os.environ.get("DATABASE_NAME", "Cluster0")
+    DATABASE_URL = os.environ.get("DATABASE_URL", "")
     OWNER_ID = int(os.environ.get("OWNER_ID", "7434248892"))  # id of the owner
     ADMINS.append(OWNER_ID) if OWNER_ID not in ADMINS else []
 
