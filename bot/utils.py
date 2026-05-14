@@ -227,10 +227,13 @@ def human_time(seconds, decimals=1):
 
 async def get_group_admins(client: Client, group_id):
     administrators = []
-    async for m in client.get_chat_members(group_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
-        m: types.ChatMember
-        None if m.user.is_bot else administrators.append(m.user.id)
-
+    try:
+        async for m in client.get_chat_members(group_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+            m: types.ChatMember
+            if not m.user.is_bot:
+                administrators.append(m.user.id)
+    except Exception as e:
+        print(f"Error getting admins for {group_id}: {e}")
     return administrators
 
 

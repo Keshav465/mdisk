@@ -36,7 +36,7 @@ class Config(object):
     BROADCAST_AS_COPY = is_enabled(
         (os.environ.get("BROADCAST_AS_COPY", "False")), False
     )
-    WEB_SERVER = is_enabled(os.environ.get("WEB_SERVER", "False"), False)
+    WEB_SERVER = is_enabled(os.environ.get("WEB_SERVER", "True"), True) if os.environ.get("PORT") else is_enabled(os.environ.get("WEB_SERVER", "False"), False)
     DATABASE_CHANNEL = (
         [int(i.strip()) for i in os.environ.get("DATABASE_CHANNEL").split(",")]
         if os.environ.get("DATABASE_CHANNEL")

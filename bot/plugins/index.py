@@ -31,6 +31,20 @@ async def index_handler(c: Bot, m: t.Message):
     if not await is_bot_admin(c, target_chat.id):
         return await sts.edit(f"Make me admin in {target_chat.title} first!")
 
+    # Check if User Bot is in chat
+    try:
+        await c.USER.get_chat(target_chat.id)
+    except Exception:
+        await sts.edit(f"User Bot joining {target_chat.title}...")
+        try:
+            if target_chat.username:
+                await c.USER.join_chat(target_chat.username)
+            else:
+                invite_link = await c.export_chat_invite_link(target_chat.id)
+                await c.USER.join_chat(invite_link)
+        except Exception as join_err:
+            return await sts.edit(f"User Bot failed to join: {join_err}")
+
     await sts.edit(f"Starting indexing for **{target_chat.title}**...")
     
     count = 0
