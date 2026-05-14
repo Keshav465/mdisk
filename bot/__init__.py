@@ -1,7 +1,15 @@
+import asyncio
 import contextlib
 import logging
 import logging.config
 import sys
+
+# Critical Patch for Python 3.10+ / 3.14 event loop issue
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 from pyrogram import Client
 from aiohttp import web
 from bot.config import Config
