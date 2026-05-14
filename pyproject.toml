@@ -5,7 +5,7 @@ description = ""
 authors = ["Replit user <<>>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "3.10.14"
 aiohttp = "^3.8.3"
 bs4 = "^0.0.1"
 fuzzywuzzy = "^0.18.0"

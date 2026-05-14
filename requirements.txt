@@ -1,13 +1,13 @@
 pyrogram==2.0.106
 tgcrypto==1.2.5
-motor==3.4.0
 pymongo==4.5.0
+motor==3.4.0
+flask==3.0.3
+aiohttp==3.9.5
 python-dotenv
-aiohttp
 telegraph[aio]
 fuzzywuzzy
 shortzy==0.0.8
 aiofiles
 beautifulsoup4
 python-Levenshtein
-flask
