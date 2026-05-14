@@ -73,50 +73,7 @@ async def about(c: Client, m: types.Message):
     )
 
 
-@Client.on_message(filters.command("index") & filters.group & filters.incoming)
-@group_wrapper
-async def index(c: Bot, m: types.Message):
-    grp_id = m.chat.id
-    group_info = await group_db.get_group(grp_id)
-    text = Script.INDEX_TEXT.format(group_info["index_channel"])
-    if len(m.command) != 2:
-        await m.reply(text)
-        return
 
-    elif is_int(m.command[1]):
-        index_channel = int(m.command[1])
-
-        bot_admin = await is_bot_admin(c, index_channel)
-        if not bot_admin:
-            await m.reply(f"Make {c.username} admin in given channel {index_channel}")
-            return
-
-        channel_info = await c.get_chat(index_channel)
-
-        if not channel_info.type.CHANNEL:
-            await m.reply("This is not a channel")
-            return
-
-        if not channel_info.username:
-            await m.reply("This is a private channel, Index any public channel")
-            return
-
-        invite_link = await c.export_chat_invite_link(index_channel)
-
-        try:
-            await c.USER.join_chat(invite_link)
-        except Exception as e:
-            print(e)
-
-        await group_db.update_group(grp_id, {"index_channel": index_channel})
-        photo = Config.TELEGRAM_JPEG
-        text = f"<b>Name:</b> {channel_info.title}\n<b>Username:</b> @{channel_info.username}\n<b>Members:</b> {channel_info.members_count}\n<b>Description:</b> {channel_info.description}\n<b>Is channel verified:</b> {'Yes' if channel_info.is_verified else 'No'}"
-        await m.reply_photo(photo, caption=f"Indexed Successfully\n\n{text}")
-        return
-    else:
-        await m.reply("Channel ID invalid.")
-
-    return
 
 
 @Client.on_message(filters.command("auto_delete") & filters.group & filters.incoming)

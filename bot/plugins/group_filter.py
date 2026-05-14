@@ -77,32 +77,20 @@ async def pm_filter(c, m: t.Message):
         bin_text = ""
         i = 1
         for result in results:
-            result: t.Message
-            text_ = result.text or result.caption
-            title = text_.splitlines()[0]
-
-            # 🧾 File size निकालना
-            if result.document:
-                file_size = f"{round(result.document.file_size / (1024 * 1024), 1)} MB"
-                if result.document.file_size >= 1024 * 1024 * 1024:
-                    file_size = f"{round(result.document.file_size / (1024 * 1024 * 1024), 1)} GB"
-            elif result.video:
-                file_size = f"{round(result.video.file_size / (1024 * 1024), 1)} MB"
-                if result.video.file_size >= 1024 * 1024 * 1024:
-                    file_size = f"{round(result.video.file_size / (1024 * 1024 * 1024), 1)} GB"
-            else:
-                file_size = "N/A"
+            title = result['file_name'].title()
+            file_size = f"{round(result['file_size'] / (1024 * 1024), 1)} MB"
+            if result['file_size'] >= 1024 * 1024 * 1024:
+                file_size = f"{round(result['file_size'] / (1024 * 1024 * 1024), 1)} GB"
 
             # 🔗 File Link बनाना
             link = None
             if free_group or is_shortener:
                 bot_username = c.username.replace("@", "")
                 link_temp = f"https://telegram.dog/{bot_username}?start=file_"
-                if result.document or result.video:
-                    title = remove_mention(remove_link(title))
-                    link = f"{link_temp}{result.id}_{result.chat.id}"
-            elif result.photo or result.text:
-                link = result.link
+                title = remove_mention(remove_link(title))
+                link = f"{link_temp}{result['message_id']}_{result['chat_id']}"
+            else:
+                link = result.get('link', '')
 
             if link:
                 temp = template.format(

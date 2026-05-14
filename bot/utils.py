@@ -30,23 +30,14 @@ INTERVALS = OrderedDict([
 ])
 
 
-async def filter_chat(c: Bot, query, chat_id_list=Config.DATABASE_CHANNEL, offset=0, filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY, num_results=Config.LIMIT):
-    search_results = []
-    raw_search_results = []
-    query_list = query.split()
-    results = []
+from bot.database.index_db import index_db
 
-    for q in query_list:
-        for chat_id in chat_id_list:
-            async for message in c.USER.search_messages(chat_id, query=q, offset=offset, filter=filter, limit=Config.LIMIT):
-                if message.text or message.caption:
-                    text = message.text or message.caption
-                    file_name = text.splitlines()[0].lower()
-                    ratio = fuzz.token_set_ratio(query, file_name)
-                    results.append((message, ratio))
+async def filter_chat(c: Bot, query, chat_id_list=Config.DATABASE_CHANNEL, offset=0, filter: enums.MessagesFilter = enums.MessagesFilter.EMPTY, num_results=Config.LIMIT):
+    results, total = await index_db.search_files(query, offset=offset, limit=num_results)
     
-    results.sort(key=lambda x: x[1], reverse=True)
-    return [r[0] for r in results[:num_results]]
+    # Convert database results back to a format similar to pyrogram messages for compatibility
+    # Note: We only have minimal data in DB, so we might need to mock some attributes or adjust group_filter.py
+    return results
 
 
 async def add_new_user(c, user_id, mention):
